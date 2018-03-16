@@ -1,8 +1,10 @@
 
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  Text
+    StyleSheet,
+    Text,
+    View,
+    Button
 } from 'react-native';
 
 export default class Banner extends Component {
@@ -21,16 +23,39 @@ export default class Banner extends Component {
   }
 
   render() {
-    if (this.props.show == true) {
-      return (<Text>Banner for {this.props.name}</Text>);
+    if (this.props.show === true) {
+      return (
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          backgroundColor: 'powderblue'
+        }}>
+          <Text style={[styles.basicText]}>
+            Banner for <Text style={styles.importantText}>{this.props.name}</Text>
+          </Text>
+
+          <Text style={[styles.basicText, styles.importantText]}>{this.props.name}</Text>
+
+          <Button style={{flex:1, alignItems: 'stretch',}} onPress={()=>{console.log("Log test");}} title="title"/>
+
+        </View>
+      );
     } else {
       return null;
     }
   }
-
-  setVisible() {
-    setState({
-      isShowingText: false
-    });
-  }
 }
+
+const styles = StyleSheet.create({
+  basicText: {
+    color: "#000000",
+    fontSize: 14,
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+  importantText: {
+    color: "#FF0000",
+    fontWeight: 'bold'
+  }
+});

@@ -24,27 +24,31 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-type Props = {
-  name : ""
-};
-export default class App extends Component<Props> {
+type Props = { name: string };
+type State = { showBanners: boolean };
 
-  _onToggleVisibility: Function;
+export default class App extends Component<Props, State> {
+
+  onToggleVisibility: Function;
 
   _onToggleVisibility() {
-    this.setState({
-      showBanners: !this.state.showBanners
+    this.setState(previousState => {
+      return { showBanners: !previousState.showBanners};
     });
     console.log('Toggle pressed');
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {showBanners: true};
-
-    this._onToggleVisibility = this._onToggleVisibility.bind(this);
+  test() {
+    return 45;
   }
 
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {showBanners: true};
+
+    this.onToggleVisibility = this._onToggleVisibility.bind(this);
+  }
 
   render() {
     let pic = {
@@ -52,20 +56,24 @@ export default class App extends Component<Props> {
     };
 
     return (
-      <View style={styles.container}>
-        <Image source={pic} style={{width: 193, height: 110}}/>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-        <Button title="Toggle visibility" onPress={this._onToggleVisibility}/>
-        <Banner name="Tony Stark" show={this.state.showBanners}/>
-        <Banner name="Jon Stark"  show={this.state.showBanners}/>
+      <View style={{flex: 1}}>
+        <View style={styles.container}>
+          <Image source={pic} style={{width: 193, height: 110}}/>
+          <Text style={styles.welcome}>
+            Welcome to React Native!
+          </Text>
+          <Text style={styles.instructions}>
+            To get started, edit App.js
+          </Text>
+          <Text style={styles.instructions}>
+            {instructions}
+          </Text>
+        </View>
+        <View style={{flex: 1}}>
+          <Button title="Toggle visibility" onPress={this.onToggleVisibility}/>
+          <Banner name="Tony Stark" show={this.state.showBanners}/>
+          <Banner name="Jon Stark"  show={this.state.showBanners}/>
+        </View>
       </View>
     );
   }
