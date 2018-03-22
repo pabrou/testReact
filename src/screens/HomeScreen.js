@@ -15,11 +15,12 @@ import {
   Alert, StatusBar
 } from 'react-native';
 
-import Banner from './components/Banner';
-import MotorcyclerList from './components/MotorcyclerList';
 import { StackNavigator } from 'react-navigation';
 import HeaderButtons from 'react-navigation-header-buttons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import Banner from '../components/Banner';
+import MotorcyclerList from '../components/MotorcyclerList';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -33,22 +34,30 @@ type State = { showBanners: boolean, motorcycles: []};
 
 export default class HomeScreen extends Component<Props, State> {
 
-    static navigationOptions = ({ navigation } : any) => {
-        const { params } = navigation.state;
-
-        return {
-          title: params ? params.name : 'Home',
-          headerStyle: styles.header,
-          headerRight: (
-              <HeaderButtons IconComponent={Ionicons} iconSize={23} color="blue">
-                  <HeaderButtons.Item title="select" onPress={() => console.log('edit')} />
-              </HeaderButtons>
-          ),
-        }
-      };
-
   onToggleVisibility: Function;
   onBannerChange: Function;
+  openModalScreen: Function;
+
+  static navigationOptions = ({ navigation } : any) => {
+      const params = navigation.state.params || {};
+
+      // Because navigationOptions may happen before componentWillMount we pass an empty function to onPress
+      const openModelScreen = params.openModalScreen ? params.openModalScreen : ()=>{};
+
+      return {
+        title: params ? params.name ? params.name : 'Home' : 'Home',
+        headerRight: (
+            <HeaderButtons IconComponent={Ionicons} iconSize={23} color="blue">
+                <HeaderButtons.Item title="select" onPress={openModelScreen} />
+            </HeaderButtons>
+        ),
+      }
+    };
+
+  _openModalScreen() {
+      console.log('open modal screen');
+      this.props.navigation.navigate('ModalScreen');
+  }
 
   _onToggleVisibility() {
     // this.setState(previousState => {
@@ -84,6 +93,12 @@ export default class HomeScreen extends Component<Props, State> {
 
     this.onToggleVisibility = this._onToggleVisibility.bind(this);
     this.onBannerChange = this._onBannerChange.bind(this);
+    this.openModalScreen = this._openModalScreen.bind(this);
+  }
+
+  componentWillMount() {
+      console.log('will mount');
+      this.props.navigation.setParams({ openModalScreen: this.openModalScreen });
   }
 
   componentDidMount() {
@@ -153,6 +168,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   header: {
-      backgroundColor: '#ADD8E6',
+      backgroundColor: '#fff',
   }
 });
